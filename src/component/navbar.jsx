@@ -29,10 +29,7 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", closeMenu);
   }, []);
 
-  // useEffect(()=>{
-  //   console.log(window.innerHeight)
-  // },[])
-
+ 
   return (
     <nav className="nav">
       <div className="nav-container">
