@@ -48,13 +48,13 @@ const Navbar = () => {
           <a href="/" onClick={() => setIsMenuOpen(false)}>
             Home
           </a>
-          <a href="#services" onClick={() => setIsMenuOpen(false)}>
+          <a href="/#services" onClick={() => setIsMenuOpen(false)}>
             Services
           </a>
-          <a href="#about" onClick={() => setIsMenuOpen(false)}>
+          <a href="/#about" onClick={() => setIsMenuOpen(false)}>
             About
           </a>
-          <a href="#testimonials" onClick={() => setIsMenuOpen(false)}>
+          <a href="/#testimonials" onClick={() => setIsMenuOpen(false)}>
             Testimonials
           </a>
           <Link to="/track" onClick={() => setIsMenuOpen(false)}>
@@ -63,8 +63,12 @@ const Navbar = () => {
           <Link to="/contact" onClick={() => setIsMenuOpen(false)}>
             {t("contact")}
           </Link>
-          <div>
-            <GlobeAltIcon style={{ color: "black", height: 20 }} onClick={changeLanguage} />
+          <div style={{ display:"flex", 
+            justifyContent:"space-between", 
+            padding:10, backgroundColor:"rgb(206, 206, 206)",
+            borderRadius:20, alignItems:"center"}} onClick={changeLanguage}>
+            <GlobeAltIcon style={{ color: "black", height: 20 }}  />
+            <span>English</span>
           </div>
         </div>
       </div>

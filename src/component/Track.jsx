@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaBoxOpen, FaShippingFast, FaHome, FaCheckCircle } from "react-icons/fa";
+import FoundData from "./FoundData";
 
 const Track = () => {
+  const [ismobile, setismobile] = useState(window.innerWidth > 768 ? false : true);
   const [trackingNumber, setTrackingNumber] = useState("");
   const [trackingData, setTrackingData] = useState(null);
+  const [isloading, setisLoading] = useState(true)
 
   // Fake database for demo
   const trackingDatabase = {
@@ -13,7 +16,7 @@ const Track = () => {
   };
 
   const steps = [
-    { id: 1, label: "Order Placed", icon: <FaBoxOpen size={24} />, color: "#f39c12" },
+    { id: 1, label: "Order Placed", icon: <FaBoxOpen size={24} />, color: "rgb(84, 232, 15)" },
     { id: 2, label: "In Transit", icon: <FaShippingFast size={24} />, color: "#3498db" },
     { id: 3, label: "Out for Delivery", icon: <FaHome size={24} />, color: "#2ecc71" },
     { id: 4, label: "Delivered", icon: <FaCheckCircle size={24} />, color: "#27ae60" },
@@ -28,9 +31,30 @@ const Track = () => {
     setTrackingData(fetchTrackingDetails(trackingNumber));
   };
 
+  useEffect(() => {
+    const hanglechange = () => {
+      if (window.innerWidth > 1014) {
+        setismobile(false);
+      } else {
+        setismobile(true);
+      }
+    };
+    window.addEventListener("resize", hanglechange);
+    return () => window.removeEventListener("resize", hanglechange);
+  }, []);
+
+
+  useEffect(()=>{
+    const timeout = setTimeout(()=>{
+      setisLoading(false)
+    },20000)
+
+    
+  },[])
+
   return (
     <div className="tracking-page" style={{ textAlign: "center" }}>
-      <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+      <div style={{ display: "flex", flexDirection: ismobile ? "column-reverse" : "row", alignItems: "center", justifyContent: "center" }}>
         {/* Tracking Form */}
         <motion.div
           initial={{ x: "10%", opacity: 0 }}
@@ -38,7 +62,7 @@ const Track = () => {
           transition={{ duration: 0.5 }}
           style={{ width: trackingData === null ? "100%" : "50%" }}
         >
-          <div className="tracking-form">
+          <div className="tracking-form" style={{ height: ismobile && trackingData !== null ? 10 : "100%", overflow:"hidden" }}>
             <h2>Track Your Shipment</h2>
             <form onSubmit={handleSubmit} className="form-container">
               <div className="form-group">
@@ -53,7 +77,7 @@ const Track = () => {
                 />
               </div>
               <button
-                type="submit"
+                type="submit" 
                 className="btn btn-primary mt-3"
                 style={{
                   backgroundColor: "#007bff",
@@ -72,73 +96,7 @@ const Track = () => {
         </motion.div>
 
         {/* Tracking Details */}
-        {trackingData && (
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            style={{
-              backgroundColor: "#fff",
-              padding: "20px",
-              borderRadius: "3px",
-              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-              width: "100%",
-              maxWidth: "500px",
-              textAlign: "left",
-            }}
-          >
-            <h3 style={{ textAlign: "center", marginBottom: "10px" }}>Tracking Details</h3>
-            <p>
-              <strong>Status:</strong> {trackingData.status}
-            </p>
-            <p>
-              <strong>Current Location:</strong> {trackingData.location}
-            </p>
-            <p>
-              <strong>Estimated Delivery:</strong> {trackingData.estimatedDelivery}
-            </p>
-
-            {/* Progress Bar */}
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px", position: "relative" }}>
-              {/* Line between steps */}
-              <div
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "10%",
-                  width: "80%",
-                  height: "5px",
-                  backgroundColor: "#ddd",
-                  zIndex: 0,
-                }}
-              />
-              {steps.map((step, index) => (
-                <div key={step.id} style={{ textAlign: "center", zIndex: 1 }}>
-                  <motion.div
-                    animate={{
-                      backgroundColor: trackingData.step >= step.id ? step.color : "#ddd",
-                      scale: trackingData.step >= step.id ? 1.2 : 1,
-                    }}
-                    transition={{ duration: 0.5 }}
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      borderRadius: "50%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      margin: "auto",
-                      color: "#fff",
-                    }}
-                  >
-                    {step.icon}
-                  </motion.div>
-                  <p style={{ fontSize: "12px", marginTop: "5px", color: trackingData.step >= step.id ? step.color : "#888" }}>{step.label}</p>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
+        {trackingData && <FoundData {...{ trackingData, steps }} />}
       </div>
     </div>
   );

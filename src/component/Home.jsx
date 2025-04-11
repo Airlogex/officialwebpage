@@ -61,7 +61,7 @@ const Home = () => {
         </motion.div>
       </motion.div>
 
-      <div className="services">
+      <div className="services" id="services">
         <h2 className="section-title">Our Services</h2>
         <div className="services-grid">
           <div className="service-card">
@@ -118,7 +118,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="testimonials">
+      <div className="testimonials" id="testimonials">
         <h2 className="section-title">What Our Clients Say</h2>
         <TestimonialSlider />
       </div>
@@ -144,7 +144,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="about-section">
+      <div className="about-section" id="about">
         <div className="about-container">
           <div className="about-content">
             <h2 className="section-title">About AirLogex</h2>
