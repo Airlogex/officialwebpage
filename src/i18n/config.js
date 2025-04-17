@@ -10,7 +10,7 @@ const resources = {
       airFreight: 'Air Freight',
       groundShipping: 'Ground Shipping',
       expressDelivery: 'Express Delivery',
-      trackShipment: 'Track Shipment',
+      trackShipment: 'Track-Shipment',
       contact: 'Contact',
     }
   },

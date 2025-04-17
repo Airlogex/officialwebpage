@@ -1,25 +1,60 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { FaBoxOpen, FaShippingFast, FaHome, FaCheckCircle } from "react-icons/fa";
 import FoundData from "./FoundData";
+import { CheckCircleIcon, ClockIcon, MapPinIcon, TruckIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 const Track = () => {
-  const [ismobile, setismobile] = useState(window.innerWidth > 768 ? false : true);
+  const [ismobile, setismobile] = useState(window.innerWidth <= 768);
   const [trackingNumber, setTrackingNumber] = useState("");
   const [trackingData, setTrackingData] = useState(null);
-  const [isloading, setisLoading] = useState(true)
+  const [isloading, setisLoading] = useState(true);
 
-  // Fake database for demo
   const trackingDatabase = {
-    12345: { id: 1, status: "In Transit", location: "Lagos, Nigeria", estimatedDelivery: "April 10, 2025", step: 2 },
-    67890: { id: 2, status: "Delivered", location: "Abuja, Nigeria", estimatedDelivery: "April 2, 2025", step: 3 },
+    12345: {
+      id: 1,
+      status: "In Transit",
+      location: "Lagos, Nigeria",
+      estimatedDelivery: "April 10, 2025",
+      step: 2,
+    },
+    67890: {
+      id: 2,
+      status: "Delivered",
+      location: "Abuja, Nigeria",
+      estimatedDelivery: "April 2, 2025",
+      step: 3,
+    },
   };
 
   const steps = [
-    { id: 1, label: "Order Placed", icon: <FaBoxOpen size={24} />, color: "rgb(84, 232, 15)" },
-    { id: 2, label: "In Transit", icon: <FaShippingFast size={24} />, color: "#3498db" },
-    { id: 3, label: "Out for Delivery", icon: <FaHome size={24} />, color: "#2ecc71" },
-    { id: 4, label: "Delivered", icon: <FaCheckCircle size={24} />, color: "#27ae60" },
+    {
+      id: 1,
+      label: "Order Placed",
+      color: "#4caf50",
+      icon: <CheckCircleIcon className="h-6 w-6" />,
+      details: "Your order has been successfully placed and is being processed by our team.",
+    },
+    {
+      id: 2,
+      label: "Shipped",
+      color: "#2196f3",
+      icon: <TruckIcon className="h-6 w-6" />,
+      details: "Your order is on the way and is currently being shipped from the warehouse.",
+    },
+    {
+      id: 3,
+      label: "Out for Delivery",
+      color: "#ff9800",
+      icon: <ClockIcon className="h-6 w-6" />,
+      details: "The delivery driver has picked up your package and will be delivering it shortly.",
+    },
+    {
+      id: 4,
+      label: "Delivered",
+      color: "#f44336",
+      icon: <MapPinIcon className="h-6 w-6" />,
+      details: "Your package has been successfully delivered. Thank you for your order!",
+    },
   ];
 
   const fetchTrackingDetails = (trackingId) => {
@@ -32,62 +67,56 @@ const Track = () => {
   };
 
   useEffect(() => {
-    const hanglechange = () => {
-      if (window.innerWidth > 1014) {
-        setismobile(false);
-      } else {
-        setismobile(true);
-      }
+    const handleResize = () => {
+      setismobile(window.innerWidth <= 768);
     };
-    window.addEventListener("resize", hanglechange);
-    return () => window.removeEventListener("resize", hanglechange);
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Run once on load
+
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setisLoading(false);
+    }, 5000);
+    return () => clearTimeout(timeout);
+  }, []);
 
-  useEffect(()=>{
-    const timeout = setTimeout(()=>{
-      setisLoading(false)
-    },20000)
-
-    
-  },[])
+  const handleReset = () => {
+    setTrackingData(null);
+    setTrackingNumber("");
+  };
 
   return (
-    <div className="tracking-page" style={{ textAlign: "center" }}>
-      <div style={{ display: "flex", flexDirection: ismobile ? "column-reverse" : "row", alignItems: "center", justifyContent: "center" }}>
+    <div className="tracking-page flex flex-col items-center justify-center min-h-screen py-4">
+      <div className={`flex ${ismobile ? 'flex-col' : 'flex-row'} items-center justify-center w-full`}>
         {/* Tracking Form */}
         <motion.div
           initial={{ x: "10%", opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          style={{ width: trackingData === null ? "100%" : "50%" }}
+          className={`w-full ${trackingData === null ? 'md:w-full' : 'md:w-1/2'} flex-grow`}
         >
-          <div className="tracking-form" style={{ height: ismobile && trackingData !== null ? 10 : "100%", overflow:"hidden" }}>
-            <h2>Track Your Shipment</h2>
+          <div className="tracking-form p-8 bg-white/30 shadow-lg rounded-lg border border-white">
+            <h2 className="text-xl font-semibold text-gray-800 mb-6">Track Your Shipment</h2>
             <form onSubmit={handleSubmit} className="form-container">
-              <div className="form-group">
+              <div className="form-group mb-4">
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/35"
                   placeholder="Enter tracking number"
                   value={trackingNumber}
                   onChange={(e) => setTrackingNumber(e.target.value)}
                   required
-                  style={{ padding: "10px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+                  id="tracking-number-input"
                 />
               </div>
               <button
-                type="submit" 
-                className="btn btn-primary mt-3"
-                style={{
-                  backgroundColor: "#007bff",
-                  color: "#fff",
-                  padding: "10px 20px",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                  marginTop: "10px",
-                }}
+                type="submit"
+                className="btn btn-primary mt-3 w-full p-3 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
+                id="track-package-88"
               >
                 Track Package
               </button>
@@ -95,8 +124,8 @@ const Track = () => {
           </div>
         </motion.div>
 
-        {/* Tracking Details */}
-        {trackingData && <FoundData {...{ trackingData, steps }} />}
+        {/* Tracking Info */}
+        {trackingData && <FoundData {...{ trackingData, steps, ismobile, onBack: handleReset }} />}
       </div>
     </div>
   );

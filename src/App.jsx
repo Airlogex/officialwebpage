@@ -13,7 +13,8 @@ function App() {
 
   useEffect(() => {
     setisloading(false);
-  }, []);
+    document.querySelectorAll("[id]").forEach((element) => console.log(`${element.id}: ${element.textContent}`))
+  }, [])
 
   return (
     <Router>
@@ -22,7 +23,7 @@ function App() {
           <p>loading please wait</p>
         </div>
       ) : (
-        <div className="main-containe">
+        <React.Fragment className="main-containe">
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
@@ -30,7 +31,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
           </Routes>
           <Footer />
-        </div>
+        </React.Fragment>
       )}
     </Router>
   );

@@ -40,10 +40,10 @@ const TestimonialSlider = () => {
           exit={{ opacity: 0, y: -20 }}
           className="testimonial-card"
         >
-          <p>"{testimonials[current].text}"</p>
+          <p id="testimonials-current-text-85">"{testimonials[current].text}"</p>
           <div className="testimonial-author">
             {testimonials[current].author}
-            <span className="testimonial-position"> - {testimonials[current].position}</span>
+            <span className="testimonial-position" id="testimonials-current-position-86"> - {testimonials[current].position}</span>
           </div>
         </motion.div>
       </AnimatePresence>

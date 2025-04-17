@@ -1,5 +1,6 @@
+@import "tailwindcss";
 /* Global styles */
-* {
+@layer base{* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -17,6 +18,9 @@ body {
   background-size: contain;
 }
 
+.hidden-scroll::-webkit-scrollbar {
+  display: "none";
+}
 /* Navigation */
 .nav {
   position: fixed;
@@ -674,4 +678,6 @@ body {
   .footer-content {
     grid-template-columns: 1fr;
   }
+}
+
 }
