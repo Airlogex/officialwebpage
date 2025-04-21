@@ -51,7 +51,7 @@ const Navbar = () => {
 
         {/* Navbar Links */}
         <div className="hidden lg:flex items-center space-x-8"> {/* Only show on larger screens */}
-          <a href="/" className="text-gray-800 hover:text-red-500 transition-colors duration-300 font-medium py-2 px-4 rounded-lg hover:bg-red-100">
+          <a href="/#home" className="text-gray-800 hover:text-red-500 transition-colors duration-300 font-medium py-2 px-4 rounded-lg hover:bg-red-100">
             Home
           </a>
           <a href="/#services" className="text-gray-800 hover:text-red-500 transition-colors duration-300 font-medium py-2 px-4 rounded-lg hover:bg-red-100">

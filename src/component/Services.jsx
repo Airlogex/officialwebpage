@@ -28,7 +28,7 @@ const Services = () => {
   const { t } = useTranslation();
 
   return (
-    <section className="py-20 px-2 sm:px-8 md:px-12 lg:px-20 text-[#0a192f]">
+    <section className="py-20 px-2 sm:px-8 md:px-12 lg:px-20 text-[#0a192f]" id='services'>
       <div className="max-w-7xl mx-auto">
         <h2 className="text-4xl font-extrabold text-center mb-16 tracking-tight">Our Services</h2>
 
@@ -36,7 +36,7 @@ const Services = () => {
           {services.map(({ icon: Icon, titleKey, description, features }, idx) => (
             <div
               key={idx}
-              className="bg-[#f9fafb] border border-gray-200 shadow-md hover:shadow-xl transition-shadow duration-300 rounded-2xl p-20 flex flex-col items-center text-center"
+              className="bg-[#f9fafb] border border-gray-200 shadow-md hover:shadow-xl transition-shadow duration-300 rounded-2xl p-10 flex flex-col items-center text-center"
             >
               <div className="flex items-center justify-center w-16 h-16 bg-[#fee2e2] rounded-full mb-6">
                 <Icon className="w-8 h-8 text-[#e11d48]" />
