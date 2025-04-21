@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { animate, motion } from "framer-motion";
 import FoundData from "./FoundData";
 import { CheckCircleIcon, ClockIcon, MapPinIcon, TruckIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 
@@ -7,7 +7,7 @@ const Track = () => {
   const [ismobile, setismobile] = useState(window.innerWidth <= 768);
   const [trackingNumber, setTrackingNumber] = useState("");
   const [trackingData, setTrackingData] = useState(null);
-  const [isloading, setisLoading] = useState(true);
+  const [isloading, setisLoading] = useState(false);
 
   const trackingDatabase = {
     12345: {
@@ -33,6 +33,7 @@ const Track = () => {
       color: "#4caf50",
       icon: <CheckCircleIcon className="h-6 w-6" />,
       details: "Your order has been successfully placed and is being processed by our team.",
+      status: "completed",
     },
     {
       id: 2,
@@ -40,6 +41,7 @@ const Track = () => {
       color: "#2196f3",
       icon: <TruckIcon className="h-6 w-6" />,
       details: "Your order is on the way and is currently being shipped from the warehouse.",
+      status: "in progress",
     },
     {
       id: 3,
@@ -47,6 +49,7 @@ const Track = () => {
       color: "#ff9800",
       icon: <ClockIcon className="h-6 w-6" />,
       details: "The delivery driver has picked up your package and will be delivering it shortly.",
+      status: "not stated",
     },
     {
       id: 4,
@@ -54,6 +57,7 @@ const Track = () => {
       color: "#f44336",
       icon: <MapPinIcon className="h-6 w-6" />,
       details: "Your package has been successfully delivered. Thank you for your order!",
+      status: "not started",
     },
   ];
 
@@ -63,7 +67,7 @@ const Track = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setTrackingData(fetchTrackingDetails(trackingNumber));
+    trackingNumber.length > 0 && setisLoading(true);
   };
 
   useEffect(() => {
@@ -80,9 +84,10 @@ const Track = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setisLoading(false);
+      trackingNumber.length !== 0 && setTrackingData(fetchTrackingDetails(trackingNumber));
     }, 5000);
     return () => clearTimeout(timeout);
-  }, []);
+  }, [isloading]);
 
   const handleReset = () => {
     setTrackingData(null);
@@ -90,43 +95,87 @@ const Track = () => {
   };
 
   return (
-    <div className="tracking-page flex flex-col items-center justify-center min-h-screen py-4">
-      <div className={`flex ${ismobile ? 'flex-col' : 'flex-row'} items-center justify-center w-full`}>
-        {/* Tracking Form */}
-        <motion.div
-          initial={{ x: "10%", opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className={`w-full ${trackingData === null ? 'md:w-full' : 'md:w-1/2'} flex-grow`}
+    <div className="tracking-page items-center justify-center h-max py-4 mt-[5rem]">
+      <motion.div className=" justify-center items-center flex flex-col w-[95%] md:w-[50rem] m-auto gap-2 px-5 py-[5rem] bg-white/40 border border-white">
+        <motion.p
+          className=" font-extrabold text-3xl mb-4"
+          initial={{ width: "1px", overflow: "hidden" }}
+          animate={{ width: "max-content" }}
+          transition={{ duration: 0.9 }}
         >
-          <div className="tracking-form p-8 bg-white/30 shadow-lg rounded-lg border border-white">
-            <h2 className="text-xl font-semibold text-gray-800 mb-6">Track Your Shipment</h2>
-            <form onSubmit={handleSubmit} className="form-container">
-              <div className="form-group mb-4">
-                <input
-                  type="text"
-                  className="form-control w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/35"
-                  placeholder="Enter tracking number"
-                  value={trackingNumber}
-                  onChange={(e) => setTrackingNumber(e.target.value)}
-                  required
-                  id="tracking-number-input"
-                />
+          Track shipping
+        </motion.p>
+        <input
+          type="text"
+          onChange={(e) => setTrackingNumber(e.target.value)}
+          className="border w-full p-2 rounded-sm shadow-inner border-white bg-neutral-100 placeholder:font-mono"
+          placeholder="e.g AIR-1200065656"
+        />
+        <button onClick={handleSubmit} className="bg-red-700 text-white p-2 w-full rounded-sm">
+          Track order
+        </button>
+        <div className=" flex justify-center items-center">
+          {isloading ? (
+            <div>
+              <div className=" rounded-full h-[30px] w-[30px] border-4 border-l-red-600 border-neutral-400 animate-spin"></div>
+              <p>please wait</p>
+            </div>
+          ) : trackingData ? (
+            <div className="mt-10">
+              <p className="mb-10">Package: {trackingData?.id}</p>
+              <div className="flex gap-5 flex-col md:flex-row">
+                {steps.map((step) => (
+                  <div className=" flex items-center gap-5 flex-row md:flex-col relative">
+                    <div
+                      className=" justify-center flex items-center rounded-full min-h-[40px] w-[40px]"
+                      style={{ backgroundColor: `${step.color}` }}
+                    >
+                      {step.icon}
+                    </div>
+                    <div className="flex flex-col">
+                      <span className=" md:text-center font-bold">{step.label}</span>
+                      <div className=" bg-white/50 text-xs p-3 w-[100%] md:h-[100px] border border-white flex flex-col gap-2 md:gap-0">
+                        <span>{step.details}</span>
+                        <span className="bg-green-300 p-2 md:absolute md:-bottom-4 w-full md:w-[80%] left-[18px] md:text-center md:rounded-2xl shadow-lg ">
+                          {step.status}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <button
-                type="submit"
-                className="btn btn-primary mt-3 w-full p-3 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
-                id="track-package-88"
-              >
-                Track Package
-              </button>
-            </form>
-          </div>
-        </motion.div>
+              <div className="mt-10 flex justify-between">
+                <div>
+                  <p>
+                    <strong className="font-black font-mono">name:</strong> chukwuemeka
+                  </p>
+                  <p className="">
+                    <strong className="font-black font-mono">address:</strong> machester road, uk
+                  </p>
+                  <p className="">
+                    <strong className="font-black font-mono">email: </strong> chukwuemekacodev@gmail.com
+                  </p>
+                  <p className="">
+                    <strong className="font-black font-mono">mobile:</strong> +2349039124772
+                  </p>
+                </div>
 
-        {/* Tracking Info */}
-        {trackingData && <FoundData {...{ trackingData, steps, ismobile, onBack: handleReset }} />}
-      </div>
+                <div className="flex flex-col items-baseline justify-baseline">
+                  <span className="font-black"> estimated time of arrival</span>
+                  <span className="font-mono">10-05-2025 10:00am</span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <p className=" font-mono text-sm">
+                NB: Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente, error officiis nulla odit veritatis aliquid accusamus amet
+                doloribus sed adipisci maxime, dolore perferendis, tempore consectetur laudantium quidem iure? Omnis, nisi?
+              </p>
+            </div>
+          )}
+        </div>
+      </motion.div>
     </div>
   );
 };
