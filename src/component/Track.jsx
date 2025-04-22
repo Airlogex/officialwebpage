@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { animate, motion } from "framer-motion";
 import FoundData from "./FoundData";
-import { CheckCircleIcon, ClockIcon, MapPinIcon, TruckIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon, ClockIcon, MapPinIcon, TruckIcon, ArrowLeftIcon, ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "react-i18next";
 
 const Track = () => {
@@ -102,6 +102,13 @@ const Track = () => {
     setTrackingNumber("");
   };
 
+  const shorten = (text) => {
+    if (text.length > 11) {
+      return text.substring(0, 20) + "...";
+    }
+    return text;
+  };
+
   return (
     <div className="tracking-page items-center justify-center h-max py-4 mt-[5rem]">
       <motion.div className=" justify-center items-center flex flex-col w-[95%] md:w-[50rem] m-auto gap-2 px-5 py-[5rem] bg-white/40 border border-white">
@@ -130,7 +137,9 @@ const Track = () => {
             </div>
           ) : trackingData ? (
             <div className="mt-10">
-              <p className="mb-10">{t("package_label")} {trackingData?.id}</p>
+              <p className="mb-10">
+                {t("package_label")} {trackingData?.id}
+              </p>
               <div className="flex gap-5 flex-col md:flex-row">
                 {steps.map((step) => (
                   <div key={step.id} className=" flex items-center gap-5 flex-row md:flex-col relative">
@@ -140,9 +149,9 @@ const Track = () => {
                     >
                       {step.icon}
                     </div>
-                    <div className="flex flex-col">
-                      <span className=" md:text-center font-bold">{step.label}</span>
-                      <div className=" bg-white/50 text-xs p-3 w-[100%] md:h-[100px] border border-white flex flex-col gap-2 md:gap-0">
+                    <div className="flex flex-col w-full">
+                      <span className=" md:text-center font-bold">{shorten(step.label)}</span>
+                      <div className=" bg-white/50 text-xs p-3 w-full md:h-[100px] border border-white flex flex-col gap-2 md:gap-0">
                         <span>{step.details}</span>
                         <span className="bg-green-300 p-2 md:absolute md:-bottom-4 w-full md:w-[80%] left-[18px] md:text-center md:rounded-2xl shadow-lg ">
                           {step.status}
@@ -152,33 +161,80 @@ const Track = () => {
                   </div>
                 ))}
               </div>
-              <div className="mt-10 flex justify-between">
-                <div>
-                  <p>
-                    <strong className="font-black font-mono">{t("user_name_label")}</strong> {trackingData?.name}
-                  </p>
-                  <p>
-                    <strong className="font-black font-mono">{t("user_address_label")}</strong> {trackingData?.location}
-                  </p>
-                  <p>
-                    <strong className="font-black font-mono">{t("user_email_label")}</strong> {trackingData?.email}
-                  </p>
-                  <p>
-                    <strong className="font-black font-mono">{t("user_mobile_label")}</strong> {trackingData?.mobile}
-                  </p>
+              <div className="mt-[5rem]">
+                {/* For small screens: Flex rows */}
+                <div className="md:hidden space-y-4">
+                  <div className="flex justify-between ">
+                    <span className="font-mono font-black">{t("user_name_label")}</span>
+                    <span>{trackingData?.name}</span>
+                  </div>
+                  <div className="flex justify-between ">
+                    <span className="font-mono font-black">{t("user_address_label")}</span>
+                    <span>{trackingData?.location}</span>
+                  </div>
+                  <div className="flex justify-between ">
+                    <span className="font-mono font-black">{t("user_email_label")}</span>
+                    <span>{trackingData?.email}</span>
+                  </div>
+                  <div className="flex justify-between ">
+                    <span className="font-mono font-black">{t("user_mobile_label")}</span>
+                    <span>{trackingData?.mobile}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-mono font-black">{shorten(t("eta_label"))}</span>
+                    <span className="font-mono">{trackingData?.estimatedDelivery}</span>
+                  </div>
                 </div>
 
-                <div className="flex flex-col items-baseline justify-baseline">
-                  <span className="font-black">{t("eta_label")}</span>
-                  <span className="font-mono">{trackingData?.estimatedDelivery}</span>
+                {/* Table view for medium and larger screens */}
+                <div className="hidden md:block overflow-x-auto">
+                  <table className="min-w-full table-auto border border-gray-300">
+                    <thead className="bg-gray-800">
+                      <tr>
+                        <th className="px-4 text-sm text-white py-2 text-left font-black font-mono border border-gray-300">
+                          {t("user_name_label")}
+                        </th>
+                        <th className="px-4 text-sm text-white py-2 text-left font-black font-mono border border-gray-300">
+                          {t("user_address_label")}
+                        </th>
+                        <th className="px-4 text-sm text-white py-2 text-left font-black font-mono border border-gray-300">
+                          {t("user_email_label")}
+                        </th>
+                        <th className="px-4 text-sm text-white py-2 text-left font-black font-mono border border-gray-300">
+                          {t("user_mobile_label")}
+                        </th>
+                        <th className="px-4 text-sm text-white py-2 text-left font-black font-mono border border-gray-300">
+                          {shorten(t("eta_label"))}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="bg-gray-100">
+                        <td className="px-3 text-center text-sm py-2 border border-gray-500">{trackingData?.name}</td>
+                        <td className="px-3 text-center text-sm py-2 border border-gray-500">{trackingData?.location}</td>
+                        <td className="px-3 text-center text-sm py-2 border border-gray-500">{trackingData?.email}</td>
+                        <td className="px-3 text-center text-sm py-2 border border-gray-500">{trackingData?.mobile}</td>
+                        <td className="px-3 text-center text-sm py-2 border border-gray-500 font-mono">{trackingData?.estimatedDelivery}</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
+              </div>
+
+              <div className="mt-6 flex gap-4 justify-end">
+                <button className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-sm shadow hover:bg-red-700 transition duration-200">
+                  <MapPinIcon className="w-5 h-5" />
+                  {t("live_map_button")}
+                </button>
+                <button className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-sm shadow hover:bg-green-700 transition duration-200">
+                  <ChatBubbleLeftEllipsisIcon className="w-5 h-5" />
+                  {t("chat_courier_button")}
+                </button>
               </div>
             </div>
           ) : (
             <div>
-              <p className=" font-mono text-sm">
-                {t("note_label")}
-              </p>
+              <p className=" font-mono text-sm">{t("note_label")}</p>
             </div>
           )}
         </div>
