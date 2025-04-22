@@ -1,20 +1,14 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
-import { GlobeAltIcon, ShieldCheckIcon, ClockIcon, ChevronDownIcon, TruckIcon } from "@heroicons/react/24/outline";
+import { GlobeAltIcon, ShieldCheckIcon, ClockIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import Services from "./Services";
 import TestimonialSlider from "./TestimonialSlider";
 import About from "./About";
-import ImageSlider from "./ImageSlider";
 
 const Home = () => {
   const { t } = useTranslation();
   const [isActive, setisActive] = useState(false);
-  const ourWork = [
-    { name: "shipping", image: "../../public/images/airplane1.PNG" },
-    { name: "deliver", image: "../../public/images/ship1.JPG" },
-    { name: "pickups", image: "../../public/images/airplane1.PNG" },
-  ];
 
   return (
     <div className="text-[#0a192f]">
@@ -41,54 +35,38 @@ const Home = () => {
         </motion.p>
         <motion.div className="z-10 mt-6" initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.6 }}>
           <a href="/track">
-            <button className="bg-[#ff0000] hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-lg transition">Get Started</button>
+            <button className="bg-[#ff0000] hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-lg transition">
+              {t("get_started")}
+            </button>
           </a>
         </motion.div>
         <motion.div className="mt-10 z-10" animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>
           <ChevronDownIcon className="w-8 h-8 text-white" />
         </motion.div>
-
-        {/* <div className="relative z-20 flex gap-5 overflow-x-auto">
-          {ourWork.map((work) => (
-            <motion.div
-              className="bg-white/70 rounded-2xl border w-[250px] overflow-hidden relative"
-              initial={{ height: "10px" }}
-              animate={{ height: "250px" }}
-              transition={{ duration: 1 }}
-            >
-              <img src={work.image} alt={work.name} className=" object-fill" />
-              <div className="bg-white absolute -bottom-30  w-full rounded-ss-xl hover:bottom-10 h-[50%] duration-500 ">
-                <span className="text-red-400 text-2xl">{work.name}</span>
-              </div>
-            </motion.div>
-          ))}
-        </div> */}
       </motion.div>
 
-      {/* ✅ Services Section (Now from separate file) */}
+      {/* Services Section */}
       <Services />
-
-      {/* <ImageSlider /> */}
 
       {/* Features Section */}
       <section className="bg-[#0a192f] text-white py-16 px-4">
-        <h2 className="text-3xl font-bold text-center mb-12">Why Choose Us</h2>
+        <h2 className="text-3xl font-bold text-center mb-12">{t("why_choose_us")}</h2>
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {[
             {
               Icon: GlobeAltIcon,
-              title: "Global Coverage",
-              desc: "Delivering to over 200 countries worldwide...",
+              title: t("global_coverage_title"),
+              desc: t("global_coverage_desc"),
             },
             {
               Icon: ShieldCheckIcon,
-              title: "Secure Shipping",
-              desc: "Comprehensive insurance up to $100,000...",
+              title: t("secure_shipping_title"),
+              desc: t("secure_shipping_desc"),
             },
             {
               Icon: ClockIcon,
-              title: "24/7 Support",
-              desc: "Round-the-clock customer service...",
+              title: t("support_title"),
+              desc: t("support_desc"),
             },
           ].map(({ Icon, title, desc }, i) => (
             <div key={i} className="bg-[#1f2937] rounded-xl p-6">
@@ -103,7 +81,6 @@ const Home = () => {
       {/* Testimonials Section */}
       <section className="bg-[#e09 c1e4a] py-16 px-4 relative overflow-hidden" id="testimonials">
         <TestimonialSlider />
-        {/* <div className="bg-black/30 absolute inset-0 z-20"></div> */}
         <img src="../../images/airplane3.PNG" alt="airplaine1" className="hidden md:block absolute top-0 right-0  md:h-[800px]  z-10" />
       </section>
 
@@ -111,10 +88,10 @@ const Home = () => {
       <section className="bg-[#721414] py-16 px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto text-center">
           {[
-            ["15+", "Years of Experience"],
-            ["1M+", "Packages Delivered"],
-            ["200+", "Countries Served"],
-            ["99%", "Customer Satisfaction"],
+            ["15+", t("years_experience")],
+            ["1M+", t("packages_delivered")],
+            ["200+", t("countries_served")],
+            ["99%", t("customer_satisfaction")],
           ].map(([stat, label], i) => (
             <div key={i}>
               <h3 className="text-4xl font-bold text-[#fff7f9] p-0">{stat}</h3>
@@ -134,10 +111,10 @@ const Home = () => {
       >
         <div className=" relative z-20 justify-center, items-center h-full ">
           <div className="h-full w-full">
-            <h2 className="text-3xl font-bold mb-4">Ready to Ship?</h2>
-            <p className="mb-6 text-gray-300">Get started with AirLogex today and experience hassle-free shipping</p>
+            <h2 className="text-3xl font-bold mb-4">{t("ready_to_ship_title")}</h2>
+            <p className="mb-6 text-gray-300">{t("ready_to_ship_desc")}</p>
             <a href="/contact" className="bg-[#ff0000] hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-lg transition">
-              Contact Us Now
+              {t("contact_us")}
             </a>
           </div>
         </div>

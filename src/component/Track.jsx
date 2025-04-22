@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { animate, motion } from "framer-motion";
 import FoundData from "./FoundData";
 import { CheckCircleIcon, ClockIcon, MapPinIcon, TruckIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { useTranslation } from "react-i18next";
 
 const Track = () => {
+  const { t } = useTranslation();
   const [ismobile, setismobile] = useState(window.innerWidth <= 768);
   const [trackingNumber, setTrackingNumber] = useState("");
   const [trackingData, setTrackingData] = useState(null);
@@ -15,6 +17,9 @@ const Track = () => {
       status: "In Transit",
       location: "Lagos, Nigeria",
       estimatedDelivery: "April 10, 2025",
+      name: "John Doe",
+      email: "johndoe@gmail.com",
+      mobile: "+234 123 4567",
       step: 2,
     },
     67890: {
@@ -22,6 +27,9 @@ const Track = () => {
       status: "Delivered",
       location: "Abuja, Nigeria",
       estimatedDelivery: "April 2, 2025",
+      name: "Jane Smith",
+      email: "jane23@gmail.com",
+      mobile: "+234 987 6543",
       step: 3,
     },
   };
@@ -29,34 +37,34 @@ const Track = () => {
   const steps = [
     {
       id: 1,
-      label: "Order Placed",
+      label: t("order_placed_label"),
       color: "#4caf50",
       icon: <CheckCircleIcon className="h-6 w-6" />,
-      details: "Your order has been successfully placed and is being processed by our team.",
+      details: t("order_placed_details"),
       status: "completed",
     },
     {
       id: 2,
-      label: "Shipped",
+      label: t("shipped_label"),
       color: "#2196f3",
       icon: <TruckIcon className="h-6 w-6" />,
-      details: "Your order is on the way and is currently being shipped from the warehouse.",
+      details: t("shipped_details"),
       status: "in progress",
     },
     {
       id: 3,
-      label: "Out for Delivery",
+      label: t("out_for_delivery_label"),
       color: "#ff9800",
       icon: <ClockIcon className="h-6 w-6" />,
-      details: "The delivery driver has picked up your package and will be delivering it shortly.",
+      details: t("out_for_delivery_details"),
       status: "not stated",
     },
     {
       id: 4,
-      label: "Delivered",
+      label: t("delivered_label"),
       color: "#f44336",
       icon: <MapPinIcon className="h-6 w-6" />,
-      details: "Your package has been successfully delivered. Thank you for your order!",
+      details: t("delivered_details"),
       status: "not started",
     },
   ];
@@ -76,7 +84,7 @@ const Track = () => {
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize(); // Run once on load
+    handleResize();
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -103,7 +111,7 @@ const Track = () => {
           animate={{ width: "max-content" }}
           transition={{ duration: 0.9 }}
         >
-          Track shipping
+          {t("track_shipping_title")}
         </motion.p>
         <input
           type="text"
@@ -112,20 +120,20 @@ const Track = () => {
           placeholder="e.g AIR-1200065656"
         />
         <button onClick={handleSubmit} className="bg-red-700 text-white p-2 w-full rounded-sm">
-          Track order
+          {t("track_order_button")}
         </button>
         <div className=" flex justify-center items-center">
           {isloading ? (
             <div>
               <div className=" rounded-full h-[30px] w-[30px] border-4 border-l-red-600 border-neutral-400 animate-spin"></div>
-              <p>please wait</p>
+              <p>{t("loading_message")}</p>
             </div>
           ) : trackingData ? (
             <div className="mt-10">
-              <p className="mb-10">Package: {trackingData?.id}</p>
+              <p className="mb-10">{t("package_label")} {trackingData?.id}</p>
               <div className="flex gap-5 flex-col md:flex-row">
                 {steps.map((step) => (
-                  <div className=" flex items-center gap-5 flex-row md:flex-col relative">
+                  <div key={step.id} className=" flex items-center gap-5 flex-row md:flex-col relative">
                     <div
                       className=" justify-center flex items-center rounded-full min-h-[40px] w-[40px]"
                       style={{ backgroundColor: `${step.color}` }}
@@ -147,30 +155,29 @@ const Track = () => {
               <div className="mt-10 flex justify-between">
                 <div>
                   <p>
-                    <strong className="font-black font-mono">name:</strong> chukwuemeka
+                    <strong className="font-black font-mono">{t("user_name_label")}</strong> {trackingData?.name}
                   </p>
-                  <p className="">
-                    <strong className="font-black font-mono">address:</strong> machester road, uk
+                  <p>
+                    <strong className="font-black font-mono">{t("user_address_label")}</strong> {trackingData?.location}
                   </p>
-                  <p className="">
-                    <strong className="font-black font-mono">email: </strong> chukwuemekacodev@gmail.com
+                  <p>
+                    <strong className="font-black font-mono">{t("user_email_label")}</strong> {trackingData?.email}
                   </p>
-                  <p className="">
-                    <strong className="font-black font-mono">mobile:</strong> +2349039124772
+                  <p>
+                    <strong className="font-black font-mono">{t("user_mobile_label")}</strong> {trackingData?.mobile}
                   </p>
                 </div>
 
                 <div className="flex flex-col items-baseline justify-baseline">
-                  <span className="font-black"> estimated time of arrival</span>
-                  <span className="font-mono">10-05-2025 10:00am</span>
+                  <span className="font-black">{t("eta_label")}</span>
+                  <span className="font-mono">{trackingData?.estimatedDelivery}</span>
                 </div>
               </div>
             </div>
           ) : (
             <div>
               <p className=" font-mono text-sm">
-                NB: Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente, error officiis nulla odit veritatis aliquid accusamus amet
-                doloribus sed adipisci maxime, dolore perferendis, tempore consectetur laudantium quidem iure? Omnis, nisi?
+                {t("note_label")}
               </p>
             </div>
           )}

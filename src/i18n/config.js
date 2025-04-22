@@ -1,37 +1,21 @@
-
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import english from '../../locales/en.json';
+import spanish from '../../locales/es.json';
 
 const resources = {
-  en: {
-    translation: {
-      welcome: 'Welcome to AirLogex',
-      subtitle: 'Your Trusted Partner in Global Logistics',
-      airFreight: 'Air Freight',
-      groundShipping: 'Ground Shipping',
-      expressDelivery: 'Express Delivery',
-      trackShipment: 'Track-Shipment',
-      contact: 'Contact',
-    }
-  },
-  es: {
-    translation: {
-      welcome: 'Bienvenido a AirLogex',
-      subtitle: 'Su Socio de Confianza en Logística Global',
-      airFreight: 'Carga Aérea',
-      groundShipping: 'Envío Terrestre',
-      expressDelivery: 'Entrega Express',
-      trackShipment: 'Rastrear Envío',
-      contact: 'Contacto',
-    }
-  }
+  en: { translation: english },
+  es: { translation: spanish }
 };
+
+// Load saved language from localStorage or default to 'en'
+const savedLanguage = localStorage.getItem('language') || 'en';
 
 i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'en',
+    lng: savedLanguage,
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false
